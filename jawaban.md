@@ -83,12 +83,12 @@ Further configuration is required for the web server, reverse proxy,
 API gateway, load balancer, content cache, or other features.</p>
 
 <p>For online documentation and support please refer to
-<a href="https://nginx.org/">nginx.org</a>.<br/>
+<a href="[https://nginx.org/](https://nginx.org/)">nginx.org</a>.<br/>
 To engage with the community please visit
-<a href="https://community.nginx.org/">community.nginx.org</a>.<br/>
+<a href="[https://community.nginx.org/](https://community.nginx.org/)">community.nginx.org</a>.<br/>
 For enterprise grade support, professional services, additional 
 security features and capabilities please refer to
-<a href="https://f5.com/nginx">f5.com/nginx</a>.</p>
+<a href="[https://f5.com/nginx](https://f5.com/nginx)">[f5.com/nginx](https://f5.com/nginx)</a>.</p>
 
 <p><em>Thank you for using nginx.</em></p>
 </body>
@@ -99,6 +99,9 @@ PS D:\Downloads\Network-Security-Course-Bank-main\UTS-Network-Security\01-sumber
  ✔ Container k8-target-1   Removed                                                                                                                                                                     0.4s
  ✔ Network k8_lab          Removed                                                                                                                                                                     0.2s
 ```
+
+### Bukti Screenshot Terminal
+![Bukti Tugas 1 - Docker Volume dan Compose](screenshots/tugas1-volume-compose.png)
 
 ### Analisis Singkat
 Docker Volume (`vol-k8`) dikelola oleh Docker daemon di penyimpanan host secara terpisah dari siklus hidup container, sehingga file `laporan-k8.txt` tetap bertahan meskipun container `w-k8` telah dihapus. Pada Docker Compose, container `attacker` dapat mengakses `target` melalui DNS internal jaringan `lab`, sedangkan host tidak dapat menjangkau `target` karena tidak ada pemetaan `ports` dan jaringan dikonfigurasi `internal: true`.
@@ -131,6 +134,9 @@ issuer=CN=k8.exfil.lab
 notBefore=Nov 24 16:58:52 2026 GMT
 notAfter=Dec 24 16:58:52 2026 GMT
 ```
+
+### Bukti Screenshot Terminal
+![Bukti Tugas 2 - Kriptografi AES-256 SHA-256 dan Sertifikat Self-Signed](screenshots/tugas2-kriptografi.png)
 
 ### Perbedaan Sertifikat Self-Signed dan Sertifikat yang Ditandatangani CA (2 Kalimat)
 Sertifikat self-signed ditandatangani sendiri oleh pemilik server tanpa verifikasi pihak ketiga, sehingga tidak otomatis dipercaya oleh browser atau sistem klien dan hanya cocok untuk pengujian lokal. Sebaliknya, sertifikat yang ditandatangani Certificate Authority (CA) telah melalui verifikasi identitas oleh lembaga tepercaya yang sertifikat akarnya tertanam di sistem klien, sehingga menjamin keaslian server dan mencegah serangan Man-in-the-Middle (MITM).
@@ -192,6 +198,13 @@ gateway-k8.lab-arp-k8 (172.19.0.3) at 22:d2:7c:9d:e8:67 [ether] PERM on eth0
 ? (172.19.0.1) at 0a:b3:b7:45:2e:bf [ether] on eth0
 ```
 
+### Bukti Screenshot Terminal
+#### 1. Pengecekan IP & MAC Address Asli:
+![Bukti Tugas 3a - Cek IP dan MAC Address](screenshots/tugas3-ip-mac.png)
+
+#### 2. Perbandingan Tabel ARP (Sebelum, Saat Spoofing, & Setelah Static ARP):
+![Bukti Tugas 3b - ARP Spoofing dan Mitigasi Static ARP](screenshots/tugas3-arp-spoofing.png)
+
 ### Penjelasan Satu Mitigasi Selain Static ARP
 Mitigasi efektif selain Static ARP adalah **Dynamic ARP Inspection (DAI)** pada switch jaringan terkelola yang bekerja sama dengan fitur **DHCP Snooping**. Switch memvalidasi setiap paket ARP yang lewat terhadap tabel binding IP–MAC resmi hasil DHCP Snooping, lalu langsung menjatuhkan (*drop*) paket ARP palsu sebelum mencapai perangkat korban.
 
@@ -233,6 +246,9 @@ Mode                 LastWriteTime         Length Name
 ```
 *(Catatan observasi: File `handshake-k8.cap` [8.216 byte] dan `wordlist-k8.txt` [213 byte] tersedia di `01-sumber-lab/samples/`, namun file `handshake-k8.cap` bawaan repositori tidak memuat frame 802.11/EAPOL valid sehingga `aircrack-ng` menampilkan `No networks found, exiting.`)*
 
+### Bukti Screenshot Terminal
+![Bukti Tugas 4 - Analisis Handshake WPA2 dengan aircrack-ng](screenshots/tugas4-aircrack.png)
+
 ### Penjelasan Empat Langkah 4-Way Handshake WPA2
 1. **Message 1 (AP → Client):** Access Point mengirim nilai acak **ANonce** kepada klien agar klien dapat mulai menurunkan kunci sesi.
 2. **Message 2 (Client → AP):** Klien menghasilkan **SNonce**, menghitung **Pairwise Transient Key (PTK)** dari kombinasi PMK, ANonce, SNonce, serta kedua MAC address, lalu mengirim SNonce disertai **MIC** (Message Integrity Code) untuk membuktikan kepemilikan PMK.
@@ -254,6 +270,9 @@ Mengirim: IP / ICMP 172.19.0.5 > 172.19.0.2 echo-request 0
 TTL balasan: 64
 Tipe ICMP balasan: 0
 ```
+
+### Bukti Screenshot Terminal
+![Bukti Tugas 5 - Pengiriman ICMP dengan Scapy](screenshots/tugas5-scapy-icmp.png)
 
 ### Penjelasan Smurf Attack
 **Smurf Attack** adalah serangan Denial of Service (DDoS) berbasis amplifikasi pada Layer 3 di mana penyerang mengirim paket **ICMP Echo Request** dalam jumlah besar ke alamat *broadcast* jaringan dengan alamat IP sumber yang dipalsukan (*IP spoofing*) menjadi alamat IP korban. Akibatnya, seluruh host aktif di dalam jaringan tersebut secara serentak membalas paket **ICMP Echo Reply** ke IP korban hingga membanjiri bandwidth dan melumpuhkan layanan korban.
@@ -292,6 +311,9 @@ docker compose -p k8 -f b/b3-syn-flood/docker-compose.yml down -v
 18:09:50.198595 IP 172.19.0.2.80 > 172.19.0.3.57342: Flags [S.], seq 1159621017, ack 693174107, win 65160, options [mss 1460,sackOK,TS val 3531959939 ecr 2583167360,nop,wscale 10], length 0
 18:09:50.198616 IP 172.19.0.3.57342 > 172.19.0.2.80: Flags [.], ack 1, win 63, options [nop,nop,TS val 2583167360 ecr 3531959939], length 0
 ```
+
+### Bukti Screenshot Terminal
+![Bukti Tugas 6 - SYN Flood dan TCP Three-Way Handshake](screenshots/tugas6-syn-flood-tcpdump.png)
 
 ### Penjelasan Satu Mitigasi SYN Flood
 Mitigasi utama serangan SYN Flood adalah mengaktifkan **TCP SYN Cookies** pada kernel Linux (`sysctl -w net.ipv4.tcp_syncookies=1`). Mekanisme ini menyandikan informasi state koneksi langsung ke dalam *Initial Sequence Number* (ISN) pada paket `SYN-ACK` sehingga server tidak perlu mengalokasikan memori di antrean backlog `SYN_RECV` sampai klien mengirim balasan `ACK` yang valid.
@@ -342,6 +364,13 @@ Query mencurigakan (label panjang berisi hex):
 24552011297
 ```
 
+### Bukti Screenshot Terminal
+#### 1. Encode NIM ke Hex, Pengiriman Query DNS, & Decode Ulang:
+![Bukti Tugas 7a - DNS Exfiltration dan Decode](screenshots/tugas7-dns-exfil.png)
+
+#### 2. Log `dnsmasq` & Hasil Deteksi Anomali (`analisis_dns.py`):
+![Bukti Tugas 7b - Log DNS dan Analisis Deteksi](screenshots/tugas7-analisis-log.png)
+
 ### Mengapa Sulit Diblokir Firewall Biasa & Indikator Deteksinya
 - **Alasan sulit diblokir firewall biasa:** Firewall konvensional hampir selalu membiarkan port **UDP/TCP 53** terbuka untuk kebutuhan resolusi domain normal, sementara payload data curian disamarkan menjadi label subdomain yang tampak seperti kueri DNS yang sah.
 - **Satu indikator deteksi:** Kemunculan label subdomain berukuran sangat panjang (misalnya `> 30` karakter) yang tersusun atas karakter heksadesimal/Base64 berentropi tinggi dan tidak wajar, disertai lonjakan kueri unik menuju satu domain induk tertentu.
@@ -388,3 +417,6 @@ PS D:\Downloads\Network-Security-Course-Bank-main\UTS-Network-Security\01-sumber
 DRIVER    VOLUME NAME
 ```
 *(Keterangan: Volume `vol-k8`, jaringan `lab-arp-k8`, serta container/jaringan compose `k8` sudah dihapus seluruhnya; daftar `docker volume ls` kosong dan entri pada `docker ps -a` maupun `docker network ls` hanya menyisakan artefak praktikum sebelumnya yang sudah `Exited`.)*
+
+### Bukti Screenshot Cleanup
+![Bukti Verifikasi Cleanup Lab Docker](screenshots/cleanup-verifikasi.png)
