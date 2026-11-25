@@ -1,0 +1,15 @@
+# Artefak sementara & private key hasil praktikum
+01-sumber-lab/*.pem
+01-sumber-lab/*.key
+01-sumber-lab/*.enc
+01-sumber-lab/laporan-k*.txt
+01-sumber-lab/hasil-k*.txt
+01-sumber-lab/dns-k*.log
+
+# Folder duplikat & file sistem/editor
+01-source-lab/
+.DS_Store
+Thumbs.db
+__pycache__/
+*.pyc
+.vscode/
